@@ -23,9 +23,9 @@ export default function ChatInput({
           disabled={isLoading}
           className="
             w-full py-3 pl-4 pr-14
-            bg-white border border-gray-200 rounded-full
-            text-sm text-gray-800 placeholder:text-gray-400
-            focus:outline-none focus:ring-2 focus:ring-[var(--bitsy-purple)]/30 focus:border-[var(--bitsy-purple)]
+            bg-white border-2 border-gray-200 rounded-full shadow-sm
+            text-sm text-gray-800 placeholder:text-gray-500
+            focus:outline-none focus:ring-2 focus:ring-[var(--bitsy-purple)]/20 focus:border-[var(--bitsy-purple)]
             disabled:opacity-60 transition-all duration-200
           "
         />
@@ -34,15 +34,14 @@ export default function ChatInput({
           disabled={!canSend}
           aria-label="Send message"
           className="
-            absolute right-1.5 w-9 h-9
+            absolute right-3 w-9 h-9
             flex items-center justify-center
-            bg-[var(--bitsy-purple)] text-white rounded-full
-            hover:bg-[var(--bitsy-purple-dark)] active:scale-95
-            disabled:opacity-40 disabled:cursor-not-allowed
-            transition-all duration-200 shadow-md
+            text-[var(--bitsy-purple)] hover:text-[var(--bitsy-purple-dark)]
+            active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed
+            transition-all duration-200
           "
         >
-          <Send size={16} className="translate-x-px" />
+          <Send size={20} className="translate-x-px" />
         </button>
       </div>
     </form>

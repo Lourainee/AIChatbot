@@ -9,7 +9,7 @@ export default function ChatWelcome() {
       <img
         src="/bitsy-mascot.png"
         alt="Bitsy"
-        className="w-32 h-32 sm:w-44 sm:h-44 object-contain mb-4 drop-shadow-md"
+        className="w-32 h-32 sm:w-44 sm:h-44 object-contain mb-4 drop-shadow-lg"
         draggable={false}
       />
       <p className="text-[var(--bitsy-text-muted)] text-sm sm:text-base">

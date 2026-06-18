@@ -16,9 +16,9 @@ export default function SuggestionChips({ onSuggestionClick, disabled, showSubti
             disabled={disabled}
             onClick={() => onSuggestionClick(label)}
             className="
-              px-3 py-2.5 text-xs sm:text-sm text-[var(--bitsy-text-dark)]
-              bg-white border border-gray-200 rounded-xl
-              hover:border-[var(--bitsy-purple)] hover:bg-purple-50
+              px-3 py-2.5 text-xs sm:text-sm text-[var(--bitsy-text-dark)] font-500
+              bg-white border-2 border-gray-200 rounded-2xl shadow-sm
+              hover:border-[var(--bitsy-purple)]/40 hover:bg-purple-50 hover:shadow-md
               active:scale-[0.98] transition-all duration-200
               disabled:opacity-50 disabled:cursor-not-allowed
               text-center truncate

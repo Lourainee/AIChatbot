@@ -21,7 +21,7 @@ export default function ChatWindow({
       className={`
         fixed z-50 flex flex-col overflow-hidden
         bg-gradient-to-b from-[var(--bitsy-bg-start)] to-[var(--bitsy-bg-end)]
-        shadow-2xl border border-white/60
+        shadow-2xl border-2 border-[var(--bitsy-text-dark)]/15
         transition-all duration-300 ease-out
         chat-window-enter
         ${isFullScreen
@@ -31,7 +31,7 @@ export default function ChatWindow({
             w-[min(400px,calc(100vw-1.5rem))]
             h-[min(620px,calc(100vh-7rem))]
             max-sm:h-[min(560px,calc(100vh-6rem))]
-            rounded-2xl
+            rounded-3xl
           `
         }
       `}
