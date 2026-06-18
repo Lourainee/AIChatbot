@@ -1,22 +1,69 @@
 @import "tailwindcss";
 
 :root {
-  --bitsy-purple: #7e14ff;
-  --bitsy-purple-light: #863bff;
-  --bitsy-purple-dark: #5a0fb8;
-  --bitsy-bg-start: #fdf2f8;
-  --bitsy-bg-end: #f5f0ff;
-  --bitsy-user-bubble: #f4a4a4;
-  --bitsy-bot-bubble: #ffffff;
-  --bitsy-text-dark: #3d1a78;
-  --bitsy-text-muted: #8b7aab;
+  --bitsy-text-primary: #4f1754;
+  --bitsy-text-dark: #4f1754;
+  --bitsy-text-muted: rgba(79, 23, 84, 0.55);
+  --bitsy-stroke: #4f1754;
+  --bitsy-shadow: rgba(79, 23, 84, 0.25);
+
+  --bitsy-bg-full-1: #fbe7e0;
+  --bitsy-bg-full-2: #e9a5ad;
+  --bitsy-bg-full-3: #b8a2cd;
+
+  --bitsy-bg-popup-1: #fdf2f8;
+  --bitsy-bg-popup-2: #f5f0ff;
+  --bitsy-bg-popup-3: #ebe4f8;
+
+  --bitsy-surface: #fdfbf3;
+  --bitsy-user-bubble: #e998a1;
+  --bitsy-bot-bubble: #fdfbf3;
+
+  --bitsy-accent-start: #8c68ae;
+  --bitsy-accent-end: #df7b86;
+
+  /* Legacy aliases */
+  --bitsy-purple: #8c68ae;
+  --bitsy-send-pink: #df7b86;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bitsy-bg-start) 0%, var(--bitsy-bg-end) 100%);
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    var(--bitsy-bg-full-1) 0%,
+    var(--bitsy-bg-full-2) 50%,
+    var(--bitsy-bg-full-3) 100%
+  );
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.bitsy-gradient-bg {
+  background: linear-gradient(
+    180deg,
+    var(--bitsy-bg-full-1) 0%,
+    var(--bitsy-bg-full-2) 50%,
+    var(--bitsy-bg-full-3) 100%
+  );
+}
+
+.bitsy-gradient-bg-popup {
+  background: linear-gradient(
+    180deg,
+    var(--bitsy-bg-popup-1) 0%,
+    var(--bitsy-bg-popup-2) 50%,
+    var(--bitsy-bg-popup-3) 100%
+  );
+}
+
+.bitsy-shadow-sm {
+  box-shadow: 0 2px 12px var(--bitsy-shadow);
+}
+
+.bitsy-shadow-md {
+  box-shadow: 0 2px 16px var(--bitsy-shadow);
 }
 
 @keyframes slideUpFadeIn {
@@ -43,10 +90,10 @@ body {
 
 @keyframes launcherPulse {
   0%, 100% {
-    filter: drop-shadow(0 6px 14px rgba(126, 20, 255, 0.35));
+    filter: drop-shadow(0 6px 14px rgba(79, 23, 84, 0.3));
   }
   50% {
-    filter: drop-shadow(0 10px 24px rgba(126, 20, 255, 0.5));
+    filter: drop-shadow(0 10px 24px rgba(79, 23, 84, 0.45));
   }
 }
 
@@ -68,4 +115,159 @@ body {
 
 .typing-dot:nth-child(3) {
   animation-delay: 0.4s;
+}
+
+/* Welcome screen: scale spacing & sizing to fit within 100dvh */
+.welcome-screen {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.welcome-screen .welcome-header {
+  padding-top: clamp(1rem, 2.5dvh, 2.5rem);
+  padding-bottom: clamp(0.75rem, 2.5dvh, 2.5rem);
+}
+
+.welcome-screen .welcome-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-inline: 1.5rem;
+  padding-bottom: clamp(0.5rem, 1.5dvh, 1.5rem);
+}
+
+.welcome-screen .welcome-heading {
+  margin-bottom: clamp(0.75rem, 1.8dvh, 1.25rem);
+}
+
+.welcome-screen .welcome-heading-line {
+  font-size: clamp(2.25rem, calc(1rem + 5.5dvh), 5.5rem);
+}
+
+.welcome-screen .welcome-logo {
+  width: clamp(7.5rem, calc(4rem + 12dvh), 12.5rem);
+  height: clamp(7.5rem, calc(4rem + 12dvh), 12.5rem);
+  margin-bottom: clamp(0.75rem, 2.5dvh, 1.875rem);
+}
+
+.welcome-screen .welcome-subtitle {
+  font-size: clamp(1.125rem, calc(0.625rem + 2dvh), 1.75rem);
+  margin-bottom: clamp(1.25rem, 4dvh, 3.125rem);
+}
+
+.welcome-screen .welcome-chips {
+  margin-bottom: clamp(1rem, 2.8dvh, 2.25rem);
+}
+
+.welcome-screen .welcome-chips-grid {
+  gap: clamp(0.625rem, 1.6dvh, 1.125rem);
+}
+
+.welcome-screen .welcome-chip-btn {
+  height: clamp(2.75rem, calc(1.5rem + 3.5dvh), 3.5rem);
+}
+
+.welcome-screen .welcome-input-field {
+  height: clamp(3.25rem, calc(2rem + 4dvh), 4.75rem);
+  padding-right: clamp(3.5rem, calc(2rem + 5dvh), 4.5rem);
+  font-size: clamp(1.125rem, calc(0.75rem + 1.6dvh), 1.625rem);
+  border-color: var(--bitsy-stroke);
+}
+
+.welcome-screen .welcome-send-btn {
+  width: clamp(2.75rem, calc(1.75rem + 3.5dvh), 3.75rem);
+  height: clamp(2.75rem, calc(1.75rem + 3.5dvh), 3.75rem);
+}
+
+/* Popup window: compact layout for small chat box */
+.popup-screen {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.popup-screen .popup-header {
+  padding: 1rem 1rem 0.5rem;
+}
+
+.popup-screen .popup-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-inline: 1rem;
+}
+
+.popup-screen .popup-welcome-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  color: var(--bitsy-text-primary);
+}
+
+.popup-screen .popup-welcome-logo {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.popup-screen .popup-welcome-subtitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--bitsy-text-primary);
+}
+
+.popup-screen .popup-chips {
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.popup-screen .popup-chips-grid {
+  gap: 0.5rem;
+}
+
+.popup-screen .popup-chip-btn {
+  height: 2.25rem;
+  font-size: 0.6875rem;
+  padding-inline: 0.5rem;
+}
+
+.popup-screen .popup-input-form {
+  padding: 0.5rem 1rem 1rem;
+  width: 100%;
+}
+
+.popup-screen .popup-input-field {
+  height: 2.75rem;
+  padding-left: 1rem;
+  padding-right: 2.75rem;
+  font-size: 0.875rem;
+  border-color: var(--bitsy-stroke);
+}
+
+.popup-screen .popup-send-btn {
+  width: 2rem;
+  height: 2rem;
+}
+
+.popup-screen .popup-send-btn svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.popup-screen .popup-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.5rem 1rem;
 }

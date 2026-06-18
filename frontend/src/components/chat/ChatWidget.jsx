@@ -30,7 +30,9 @@ export default function ChatWidget() {
 
   return (
     <>
-      <ChatLauncher onClick={handleOpen} isOpen={isOpen} />
+      {(!isOpen || !isFullScreen) && (
+        <ChatLauncher onClick={handleOpen} isOpen={isOpen} />
+      )}
 
       {isOpen && (
         <ChatWindow

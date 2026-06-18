@@ -14,7 +14,8 @@ export const MOCK_REPLIES = [
 
 export const CHAT_COPY = {
   launcherLabel: 'Open chat with Bitsy',
-  welcomeTitle: "Hello I'm Bitsy!",
+  welcomeTitleLine1: "Hello I'm",
+  welcomeTitleLine2: 'Bitsy!',
   welcomeSubtitle: 'How can we help you?',
   chatTitle: 'Chat with Bitsy',
   onlineStatus: 'Online',

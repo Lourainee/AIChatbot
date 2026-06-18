@@ -13,10 +13,10 @@ export default function ChatLauncher({ onClick, isOpen }) {
       className={`
         fixed z-[60] flex items-center justify-center
         bg-transparent border-0 p-0 m-0 appearance-none
-        outline-none focus-visible:ring-2 focus-visible:ring-[var(--bitsy-purple)] focus-visible:ring-offset-2 rounded-full
-        transition-transform duration-300 ease-out
+        outline-none focus-visible:ring-2 focus-visible:ring-[var(--bitsy-stroke)] focus-visible:ring-offset-2 rounded-full
+        transition-all duration-300 ease-out
         ${isOpen
-          ? 'bottom-4 right-4 sm:bottom-6 sm:right-6 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none'
+          ? 'bottom-4 right-4 sm:bottom-6 sm:right-6 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none'
           : 'bottom-6 right-6 w-28 h-28 sm:w-32 sm:h-32 hover:scale-110 active:scale-95 cursor-pointer'
         }
       `}
