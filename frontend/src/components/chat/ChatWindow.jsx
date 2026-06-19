@@ -73,13 +73,26 @@ export default function ChatWindow({
         </div>
       ) : (
         <>
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <div className={`flex-1 flex flex-col min-h-0 overflow-hidden ${!isPopup ? 'active-chat-screen' : ''}`}>
             {isPopup ? (
               <div className="popup-messages">
                 <ChatMessages messages={messages} isLoading={isLoading} isPopup />
               </div>
             ) : (
-              <ChatMessages messages={messages} isLoading={isLoading} />
+              <div className="active-chat-scroll">
+                <div className="active-chat-inner">
+                  <ChatMessages
+                    messages={messages}
+                    isLoading={isLoading}
+                    isFullScreen={isFullScreen}
+                  />
+                  <SuggestionChips
+                    onSuggestionClick={onSuggestionClick}
+                    disabled={isLoading}
+                    showFollowUp
+                  />
+                </div>
+              </div>
             )}
             {isPopup && (
               <div className="px-4 shrink-0">
@@ -99,6 +112,7 @@ export default function ChatWindow({
             onSubmit={onSubmit}
             isLoading={isLoading}
             isPopup={isPopup}
+            isActiveFullscreen={!isPopup && isFullScreen}
             compact
           />
         </>

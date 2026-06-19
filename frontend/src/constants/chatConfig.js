@@ -17,8 +17,11 @@ export const CHAT_COPY = {
   welcomeTitleLine1: "Hello I'm",
   welcomeTitleLine2: 'Bitsy!',
   welcomeSubtitle: 'How can we help you?',
+  followUpSuggestionsLabel: 'You might also ask:',
   chatTitle: 'Chat with Bitsy',
   onlineStatus: 'Online',
+  userLabel: 'User',
+  botLabel: 'AI Chatbot',
   inputPlaceholder: 'Type your message...',
   timestampJustNow: 'Just now',
 };
