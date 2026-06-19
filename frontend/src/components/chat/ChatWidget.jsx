@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useChatMock } from '../../hooks/useChatMock';
+import { useChat } from '../../hooks/useChat';
 import ChatLauncher from './ChatLauncher';
 import ChatWindow from './ChatWindow';
 
@@ -16,7 +16,7 @@ export default function ChatWidget() {
     handleSuggestionClick,
     handleSubmit,
     resetChat,
-  } = useChatMock();
+  } = useChat();
 
   const handleOpen = () => setIsOpen(true);
 
