@@ -22,7 +22,7 @@ export default function ChatLauncher({ onClick, isOpen }) {
       `}
     >
       <img
-        src="/bitsy-mascot.png"
+          src="/Light_Version_Logo_Mascot.png"
         alt="Bitsy mascot"
         className={`w-full h-full object-contain pointer-events-none select-none ${
           isOpen ? 'drop-shadow-lg' : 'chat-launcher-pulse'

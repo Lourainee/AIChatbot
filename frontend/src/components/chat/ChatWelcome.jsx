@@ -7,12 +7,12 @@ export default function ChatWelcome({ isWelcomeScreen = false, isPopup = false }
         <h1 className="popup-welcome-heading">
           {CHAT_COPY.welcomeTitleLine1} {CHAT_COPY.welcomeTitleLine2}
         </h1>
-        <img
-          src="/bitsy-mascot.png"
-          alt="Bitsy"
-          className="popup-welcome-logo object-contain drop-shadow-[0_4px_12px_rgba(79,23,84,0.15)]"
-          draggable={false}
-        />
+           <img
+             src="/Light_Version_Logo_Mascot.png"
+             alt="Bitsy"
+             className="popup-welcome-logo object-contain drop-shadow-[0_4px_12px_rgba(79,23,84,0.15)]"
+             draggable={false}
+           />
         <p className="popup-welcome-subtitle">{CHAT_COPY.welcomeSubtitle}</p>
       </div>
     );
@@ -33,9 +33,9 @@ export default function ChatWelcome({ isWelcomeScreen = false, isPopup = false }
         </span>
       </h1>
 
-      <img
-        src="/bitsy-mascot.png"
-        alt="Bitsy"
+         <img
+           src="/Light_Version_Logo_Mascot.png"
+           alt="Bitsy"
         className={`object-contain drop-shadow-[0_8px_24px_rgba(79,23,84,0.18)] ${
           isWelcomeScreen
             ? 'welcome-logo'
