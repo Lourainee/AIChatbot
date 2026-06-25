@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 function StatCard({ num, label }) {
   return (
-    <div className="lp-card-smooth" style={{
+    <div style={{
       background: '#F0F4FC',
       border: '1.5px solid #EC0B48',
       borderRadius: '1rem',
       padding: '1.5rem 1.25rem',
       textAlign: 'left',
-      boxShadow: '0 4px 16px rgba(240,244,252,1)',
+      boxShadow: '0 4px 16px #F0F4FC',
     }}>
       <div style={{ fontSize: '2rem', fontWeight: 800, color: '#4C539F', lineHeight: 1 }}>{num}</div>
       <div style={{ fontSize: '0.875rem', color: '#393C46', marginTop: '0.35rem' }}>{label}</div>
@@ -21,27 +21,28 @@ function FaqItem({ q, a, defaultOpen = false }) {
   return (
     <div
       onClick={() => setOpen(o => !o)}
-      className="lp-card-smooth"
       style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '0.875rem 1rem', cursor: 'pointer' }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
         <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#4C539F', flex: 1 }}>{q}</span>
-        <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '50%', background: 'rgba(216,218,220,0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s' }}>
-          <svg viewBox="0 0 10 6" width="10" height="6" style={{ fill: 'rgba(76,83,159,0.90)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}>
+        <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '50%', background: 'rgba(216, 218, 220, 0.70)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s' }}>
+          <svg viewBox="0 0 10 6" width="10" height="6" style={{ fill: 'rgba(76, 83, 159, 0.90)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}>
             <polygon points="0,0 10,0 5,6" />
           </svg>
         </div>
       </div>
-      <div className={`lp-faq-body ${open ? 'open' : ''}`}>
-        <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: '0.5rem 0 0', lineHeight: 1.55 }}>{a}</p>
-      </div>
+      {open && (
+        <div style={{ marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: 0, lineHeight: 1.55 }}>{a}</p>
+        </div>
+      )}
     </div>
   );
 }
 
 export default function LandingPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#FFFFFF', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', overflowX: 'hidden' }}>
 
       {/* HERO */}
       <section style={{
@@ -49,17 +50,16 @@ export default function LandingPage() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: 'radial-gradient(ellipse 60% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
+        background: 'radial-gradient(circle at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         overflow: 'hidden',
       }}>
-
         {/* NAV */}
         <nav style={{ padding: '1.25rem 2rem' }}>
           <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#000000' }}>Blinc Logo</span>
         </nav>
 
         {/* centered content */}
-        <div className="lp-fade-up" style={{
+        <div style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -91,37 +91,41 @@ export default function LandingPage() {
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="lp-btn-smooth" style={{
-              border: '1.5px solid #4C539F', borderRadius: '999px',
-              padding: '0.5rem 1.5rem', background: 'transparent',
-              color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
-            }}>
+            <button 
+              onClick={() => window.location.href = '#chat'} 
+              style={{
+                border: '1.5px solid #4C539F', borderRadius: '999px',
+                padding: '0.5rem 1.5rem', background: 'transparent',
+                color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
+              }}
+            >
               Ask Bitsy now
             </button>
-            <button className="lp-btn-smooth" style={{
-              border: '1.5px solid #4C539F', borderRadius: '999px',
-              padding: '0.5rem 1.5rem', background: 'transparent',
-              color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
-            }}>
+            <button 
+              onClick={() => window.open('https://bitshareslabs.com/', '_blank')}
+              style={{
+                border: '1.5px solid #4C539F', borderRadius: '999px',
+                padding: '0.5rem 1.5rem', background: 'transparent',
+                color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
+              }}
+            >
               View BLIP page
             </button>
           </div>
         </div>
-
       </section>
 
       {/* CHALLENGE + SOLUTION */}
       <section style={{
-        background: 'radial-gradient(ellipse 80% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
+        background: 'radial-gradient(circle at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         padding: '5rem 2rem',
       }}>
-
         {/* CHALLENGE */}
         <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>
             THE CHALLENGE
           </h2>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.08em', margin: '0 0 0.75rem' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.08em', margin: '0 0 0.75rem' }}>
             INTERNSHIP QUESTIONS SLOW YOU DOWN.
           </p>
           <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '520px', margin: '0 auto 3rem', lineHeight: 1.65 }}>
@@ -136,8 +140,8 @@ export default function LandingPage() {
               { icon: <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4C539F" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>, title: 'Missing batch windows', body: 'Batches open in January, May, and September. Missing the right window means a months-long wait to reapply.' },
             ].map(({ icon, title, body }) => (
               <div key={title} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: '#D8DADC', border: '2px solid #EC0B48', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '-1.375rem', position: 'relative', zIndex: 1 }}>{icon}</div>
-                <div className="lp-card-smooth" style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '2.25rem 1.25rem 1.25rem', boxShadow: '0 4px 16px rgba(240,244,252,1)', textAlign: 'left', width: '100%' }}>
+                <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: '#D8DADC', border: '2px solid #EC0B48', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '-1.375rem', position: 'relative', zIndex: 1 }}>{icon}</div>
+                <div style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '2rem 1.25rem 1.25rem', boxShadow: '0 4px 16px #F0F4FC', textAlign: 'left', width: '100%' }}>
                   <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#4C539F', margin: '0 0 0.5rem' }}>{title}</h3>
                   <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: 0, lineHeight: 1.6 }}>{body}</p>
                 </div>
@@ -150,7 +154,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: '0 0 280px', minWidth: '200px' }}>
             <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.75rem', lineHeight: 1.05 }}>THE<br />SOLUTION</h2>
-            <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.75rem' }}>BITSY KNOWS BLIP INSIDE AND OUT</p>
+            <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.07em', margin: '0 0 0.75rem' }}>BITSY KNOWS BLIP INSIDE AND OUT</p>
             <p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: '0 0 0.75rem' }}>Bitsy is trained on all official BLINC internship information - roles, hiring steps, documents, school partnerships, and schedules - so you get the right answer immediately.</p>
             <p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: 0 }}>No waiting. No guessing. Just clear guidance whenever you need it.</p>
           </div>
@@ -164,7 +168,7 @@ export default function LandingPage() {
             ].map(({ n, title, body, center }) => (
               <div key={n} style={{ gridColumn: center ? '1 / -1' : undefined, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: center ? '260px' : undefined, margin: center ? '0 auto' : undefined }}>
                 <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#D8DADC', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, color: '#393C46', marginBottom: '-1.25rem', position: 'relative', zIndex: 1 }}>{n}</div>
-                <div className="lp-card-smooth" style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '1.75rem 1rem 1rem', boxShadow: '0 4px 16px rgba(240,244,252,1)', textAlign: 'center', width: '100%' }}>
+                <div style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '1.75rem 1rem 1rem', boxShadow: '0 4px 16px #F0F4FC', textAlign: 'center', width: '100%' }}>
                   <h4 style={{ fontSize: '0.875rem', fontWeight: 700, color: '#4C539F', margin: '0 0 0.35rem' }}>{title}</h4>
                   <p style={{ fontSize: '0.8rem', color: '#393C46', margin: 0, lineHeight: 1.55 }}>{body}</p>
                 </div>
@@ -172,12 +176,11 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-
       </section>
 
       {/* ABOUT BLINC */}
       <section style={{
-        background: 'radial-gradient(ellipse 60% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
+        background: 'radial-gradient(circle at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         padding: '5rem 2rem',
         textAlign: 'center',
         minHeight: '100vh',
@@ -189,7 +192,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>
             ABOUT BLINC
           </h2>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 1rem' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.07em', margin: '0 0 1rem' }}>
             A BLOCKCHAIN &amp; WEB TECHNOLOGY COMPANY – BASED IN BAGUIO
           </p>
           <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '640px', margin: '0 auto 3.5rem', lineHeight: 1.65 }}>
@@ -207,7 +210,7 @@ export default function LandingPage() {
 
       {/* FAQs */}
       <section style={{
-        background: 'radial-gradient(ellipse 80% 100% at 20% 60%, #6069FF 0%, #A2A8FE 30%, #DADDFF 55%, #FFFFFF 80%)',
+        background: 'radial-gradient(circle at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         padding: '5rem 2rem',
         minHeight: '100vh',
         display: 'flex',
@@ -218,7 +221,7 @@ export default function LandingPage() {
           {/* LEFT */}
           <div style={{ flex: '0 0 300px', minWidth: '220px' }}>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem' }}>FAQs</h2>
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.5rem' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.07em', margin: '0 0 0.5rem' }}>
               EVERYTHING INTERNS ASK BEFORE APPLYING
             </p>
             <p style={{ fontSize: '0.875rem', color: '#393C46', margin: '0 0 0.5rem', lineHeight: 1.6 }}>
@@ -232,9 +235,9 @@ export default function LandingPage() {
               <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: '0 0 0.875rem', lineHeight: 1.55 }}>
                 Can't find the answer to your question? Send us an email and we'll get back to you as soon as possible.
               </p>
-              <button className="lp-btn-smooth" style={{ border: '1.5px solid #4C539F', borderRadius: '999px', padding: '0.4rem 1.25rem', background: 'transparent', color: '#393C46', fontSize: '0.875rem', cursor: 'pointer' }}>
+              <div style={{ border: '1.5px solid #4C539F', borderRadius: '999px', padding: '0.4rem 1.25rem', background: 'transparent', color: '#393C46', fontSize: '0.875rem', cursor: 'pointer', display: 'inline-block', textAlign: 'center' }}>
                 Send Email
-              </button>
+              </div>
             </div>
           </div>
 
@@ -251,6 +254,92 @@ export default function LandingPage() {
           </div>
 
         </div>
+      </section>
+
+{/* COMBINED CHAT, CTA, AND FOOTER SECTION */}
+      <section style={{
+        position: 'relative',
+        background: 'radial-gradient(circle at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
+        padding: '6rem 2rem 0 2rem',
+        textAlign: 'center',
+        overflow: 'hidden'
+      }}>
+        {/* CHAT WITH BITSY INNER CONTENT */}
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto 12rem' }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em', textTransform: 'uppercase' }}>
+            CHAT WITH BITSY
+          </h2>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.07em', margin: '0 0 0.75rem' }}>
+            YOUR PERSONAL RECRUITMENT ASSISTANT
+          </p>
+          <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '520px', margin: '0 auto 3rem', lineHeight: 1.65 }}>
+            Ask anything about BLIP — documents, roles, batch dates, requirements. Bitsy is live and ready.
+          </p>
+
+          {/* Chat Container Window with targeted graphic specifications */}
+          <div style={{ 
+            maxWidth: '540px', 
+            margin: '0 auto',
+            background: '#FFFFFF',
+            borderRadius: '1.25rem',
+            padding: '1.25rem 1.25rem 0rem 1.25rem',
+            boxShadow: '0 24px 48px rgba(0, 0, 0, 0.12)',
+          }}>
+            <div style={{
+              background: '#FFFFFF',
+              borderRadius: '1rem 1rem 0 0',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              {/* Graphic container where your PNG replacement source fits flawlessly */}
+              <div style={{ position: 'relative', background: '#FFFFFF' }}>
+                <img 
+                  src="/cbitsy.png" 
+                  alt="Chat with Bitsy" 
+                  style={{ width: '100%', height: 'auto', display: 'block' }} 
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FINAL CALL TO ACTION INNER CONTENT */}
+        <div style={{ margin: '0 auto 12rem', maxWidth: '700px' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76, 83, 159, 0.84)', letterSpacing: '0.08em', margin: '0 0 0.5rem' }}>READY TO BEGIN?</p>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 1rem', letterSpacing: '-0.01em' }}>
+            Start your BLIP journey today.
+          </h2>
+          <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '520px', margin: '0 auto 2.5rem', lineHeight: 1.65 }}>
+            Apply for the next batch, explore available roles, or just ask Bitsy your first question right now.
+          </p>
+        </div>
+
+        {/* FOOTER INNER CONTENT */}
+        <footer style={{ background: '#E6E8F8', padding: '2rem', borderTop: '1px solid rgba(0,0,0,0.05)', margin: '0 -2rem' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#393C46', lineHeight: 1.6, textAlign: 'left' }}>
+              <strong style={{ color: '#4C539F' }}>BITSHARES LABS, INC. (BLINC)</strong><br />
+              Level 5 Abanao Square Mall, Baguio City 2600, Philippines<br />
+              Globe: +63 917 459 7000 · Smart: +63 919 627 7000
+            </div>
+{/* Vector Social Icons matching brand assets */}
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              {/* Facebook Icon Button */}
+              <a href="#" aria-label="Facebook" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="16" height="16" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M9 8H7v3h2v9h3v-9h3l.5-3H12V6c0-.88.72-1 1-1h2V2h-3c-2.76 0-5 2.24-5 5v1z"/></svg>
+              </a>
+              {/* Twitter / X Icon Button */}
+              <a href="#" aria-label="Twitter" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="14" height="14" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              {/* LinkedIn Icon Button */}
+              <a href="#" aria-label="LinkedIn" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="14" height="14" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+            </div>
+          </div>
+        </footer>
       </section>
 
     </div>
