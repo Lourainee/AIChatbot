@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useChat } from '../../hooks/useChat';
 import ChatLauncher from './ChatLauncher';
 import ChatWindow from './ChatWindow';
 
-export default function ChatWidget() {
+export default function ChatWidget({ externalOpen, onExternalOpenHandled }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // open when parent triggers it
+  useEffect(() => {
+    if (externalOpen) {
+      setIsOpen(true);
+      onExternalOpenHandled?.();
+    }
+  }, [externalOpen]);
 
   const {
     messages,

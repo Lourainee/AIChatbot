@@ -1,4 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+function useScrollFade() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.15 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, visible];
+}
+
+function FadeIn({ children, delay = 0, style = {} }) {
+  const [ref, visible] = useScrollFade();
+  return (
+    <div ref={ref} style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(24px)',
+      transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
 
 function StatCard({ num, label }) {
   return (
@@ -39,7 +66,7 @@ function FaqItem({ q, a, defaultOpen = false }) {
   );
 }
 
-export default function LandingPage() {
+export default function LandingPage({ onOpenChat }) {
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
 
@@ -91,20 +118,21 @@ export default function LandingPage() {
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="lp-btn-smooth" style={{
+            <button className="lp-btn-smooth" onClick={onOpenChat} style={{
               border: '1.5px solid #4C539F', borderRadius: '999px',
               padding: '0.5rem 1.5rem', background: 'transparent',
               color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
             }}>
               Ask Bitsy now
             </button>
-            <button className="lp-btn-smooth" style={{
+            <a href="https://www.blinc.ph" target="_blank" rel="noopener noreferrer" className="lp-btn-smooth" style={{
               border: '1.5px solid #4C539F', borderRadius: '999px',
               padding: '0.5rem 1.5rem', background: 'transparent',
               color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
+              textDecoration: 'none', display: 'inline-block',
             }}>
               View BLIP page
-            </button>
+            </a>
           </div>
         </div>
 
@@ -118,16 +146,9 @@ export default function LandingPage() {
 
         {/* CHALLENGE */}
         <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>
-            THE CHALLENGE
-          </h2>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.08em', margin: '0 0 0.75rem' }}>
-            INTERNSHIP QUESTIONS SLOW YOU DOWN.
-          </p>
-          <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '520px', margin: '0 auto 3rem', lineHeight: 1.65 }}>
-            Most interns have the same set of concerns before they even apply — and
-            waiting days for an email reply shouldn't stop you from moving forward.
-          </p>
+          <FadeIn><h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>THE CHALLENGE</h2></FadeIn>
+          <FadeIn delay={0.1}><p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.08em', margin: '0 0 0.75rem' }}>INTERNSHIP QUESTIONS SLOW YOU DOWN.</p></FadeIn>
+          <FadeIn delay={0.2}><p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '520px', margin: '0 auto 3rem', lineHeight: 1.65 }}>Most interns have the same set of concerns before they even apply — and waiting days for an email reply shouldn't stop you from moving forward.</p></FadeIn>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '1.25rem', maxWidth: '1000px', margin: '0 auto' }}>
             {[
               { icon: <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4C539F" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Slow response times', body: 'Sending emails and waiting 2–3 days for answers costs you preparation time during critical application windows.' },
@@ -149,10 +170,10 @@ export default function LandingPage() {
         {/* SOLUTION */}
         <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: '0 0 280px', minWidth: '200px' }}>
-            <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.75rem', lineHeight: 1.05 }}>THE<br />SOLUTION</h2>
-            <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.75rem' }}>BITSY KNOWS BLIP INSIDE AND OUT</p>
-            <p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: '0 0 0.75rem' }}>Bitsy is trained on all official BLINC internship information - roles, hiring steps, documents, school partnerships, and schedules - so you get the right answer immediately.</p>
-            <p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: 0 }}>No waiting. No guessing. Just clear guidance whenever you need it.</p>
+            <FadeIn><h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.75rem', lineHeight: 1.05 }}>THE<br />SOLUTION</h2></FadeIn>
+            <FadeIn delay={0.1}><p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.75rem' }}>BITSY KNOWS BLIP INSIDE AND OUT</p></FadeIn>
+            <FadeIn delay={0.15}><p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: '0 0 0.75rem' }}>Bitsy is trained on all official BLINC internship information - roles, hiring steps, documents, school partnerships, and schedules - so you get the right answer immediately.</p></FadeIn>
+            <FadeIn delay={0.2}><p style={{ fontSize: '0.875rem', color: '#393C46', lineHeight: 1.65, margin: 0 }}>No waiting. No guessing. Just clear guidance whenever you need it.</p></FadeIn>
           </div>
           <div style={{ flex: 1, minWidth: '280px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             {[
@@ -186,16 +207,9 @@ export default function LandingPage() {
         justifyContent: 'center',
       }}>
         <div style={{ maxWidth: '900px', width: '100%' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>
-            ABOUT BLINC
-          </h2>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 1rem' }}>
-            A BLOCKCHAIN &amp; WEB TECHNOLOGY COMPANY – BASED IN BAGUIO
-          </p>
-          <p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '640px', margin: '0 auto 3.5rem', lineHeight: 1.65 }}>
-            BITSHARES LABS, INC. (BLINC) builds blockchain platforms, web and mobile applications, and digital products.
-            We're passionate, competitive, and flexible and we invest in the next generation of tech talent through BLIP.
-          </p>
+          <FadeIn><h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem', letterSpacing: '-0.01em' }}>ABOUT BLINC</h2></FadeIn>
+          <FadeIn delay={0.1}><p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 1rem' }}>A BLOCKCHAIN &amp; WEB TECHNOLOGY COMPANY – BASED IN BAGUIO</p></FadeIn>
+          <FadeIn delay={0.2}><p style={{ fontSize: '0.9rem', color: '#393C46', maxWidth: '640px', margin: '0 auto 3.5rem', lineHeight: 1.65 }}>BITSHARES LABS, INC. (BLINC) builds blockchain platforms, web and mobile applications, and digital products. We're passionate, competitive, and flexible and we invest in the next generation of tech talent through BLIP.</p></FadeIn>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', maxWidth: '580px', margin: '0 auto' }}>
             <div style={{ justifySelf: 'end', width: '220px' }}><StatCard num="212+" label="Total interns trained" /></div>
             <div style={{ justifySelf: 'start', width: '220px' }}><StatCard num="15" label="Batches completed" /></div>
@@ -217,16 +231,10 @@ export default function LandingPage() {
 
           {/* LEFT */}
           <div style={{ flex: '0 0 300px', minWidth: '220px' }}>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem' }}>FAQs</h2>
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.5rem' }}>
-              EVERYTHING INTERNS ASK BEFORE APPLYING
-            </p>
-            <p style={{ fontSize: '0.875rem', color: '#393C46', margin: '0 0 0.5rem', lineHeight: 1.6 }}>
-              These are the real questions that come up during BLIP recruitment.
-            </p>
-            <p style={{ fontSize: '0.875rem', color: '#393C46', margin: '0 0 1.75rem', lineHeight: 1.6 }}>
-              Bitsy can answer all of these - and more.
-            </p>
+            <FadeIn><h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#4C539F', margin: '0 0 0.5rem' }}>FAQs</h2></FadeIn>
+            <FadeIn delay={0.1}><p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(76,83,159,0.84)', letterSpacing: '0.07em', margin: '0 0 0.5rem' }}>EVERYTHING INTERNS ASK BEFORE APPLYING</p></FadeIn>
+            <FadeIn delay={0.15}><p style={{ fontSize: '0.875rem', color: '#393C46', margin: '0 0 0.5rem', lineHeight: 1.6 }}>These are the real questions that come up during BLIP recruitment.</p></FadeIn>
+            <FadeIn delay={0.2}><p style={{ fontSize: '0.875rem', color: '#393C46', margin: '0 0 1.75rem', lineHeight: 1.6 }}>Bitsy can answer all of these - and more.</p></FadeIn>
             <div style={{ background: '#F0F4FC', border: '1.5px solid #EC0B48', borderRadius: '1rem', padding: '1.25rem' }}>
               <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#4C539F', margin: '0 0 0.5rem' }}>STILL HAVE A QUESTIONS?</p>
               <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: '0 0 0.875rem', lineHeight: 1.55 }}>
