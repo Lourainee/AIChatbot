@@ -30,8 +30,8 @@ export default function ChatWindow({
           : `
             bottom-[5.5rem] right-4 sm:bottom-[7rem] sm:right-6
             w-[min(400px,calc(100vw-2rem))]
-            h-[min(620px,calc(100dvh-8rem))]
-            max-h-[calc(100dvh-8rem)]
+            h-[min(360px,calc(100dvh-10rem))]
+            max-h-[calc(100dvh-10rem)]
             rounded-3xl shadow-2xl border-2 border-[var(--bitsy-stroke)]
           `
         }

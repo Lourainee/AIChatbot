@@ -3,8 +3,7 @@ import { useChat } from '../../hooks/useChat';
 import ChatLauncher from './ChatLauncher';
 import ChatWindow from './ChatWindow';
 
-export default function ChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ChatWidget({ chatOpen, onChatOpen, onChatClose }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const {
@@ -18,23 +17,19 @@ export default function ChatWidget() {
     resetChat,
   } = useChat();
 
-  const handleOpen = () => setIsOpen(true);
-
   const handleClose = () => {
-    setIsOpen(false);
     setIsFullScreen(false);
     resetChat();
+    onChatClose();
   };
 
   const handleToggleFullscreen = () => setIsFullScreen((prev) => !prev);
 
   return (
     <>
-      {(!isOpen || !isFullScreen) && (
-        <ChatLauncher onClick={handleOpen} isOpen={isOpen} />
-      )}
+      <ChatLauncher onClick={chatOpen ? onChatClose : onChatOpen} isOpen={chatOpen} />
 
-      {isOpen && (
+      {chatOpen && (
         <ChatWindow
           isFullScreen={isFullScreen}
           hasStartedChat={hasStartedChat}
