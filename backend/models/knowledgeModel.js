@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 
 export const KnowledgeModel = {
     async upsert(section, data, updatedBy = 'system') {
-        if (!Knowledge.isValidSection(section)) {
-            throw new Error(`Invalid section: ${section}. Must be one of: company, internship, faq`);
+        if (!section || typeof section !== 'string' || section.trim().length === 0) {
+            throw new Error('Section must be a non-empty string');
         }
 
         if (!data || typeof data !== 'object' || Object.keys(data).length === 0) {
@@ -13,14 +13,14 @@ export const KnowledgeModel = {
 
         return await Knowledge.findOneAndUpdate(
             { section },
-            { 
-                section, 
+            {
+                section,
                 data,
                 lastUpdatedBy: updatedBy,
                 updatedAt: new Date()
             },
-            { 
-                upsert: true, 
+            {
+                upsert: true,
                 new: true,
                 runValidators: true,
                 setDefaultsOnInsert: true
@@ -33,8 +33,8 @@ export const KnowledgeModel = {
     },
 
     async getBySection(section) {
-        if (!Knowledge.isValidSection(section)) {
-            throw new Error(`Invalid section: ${section}`);
+        if (!section || typeof section !== 'string' || section.trim().length === 0) {
+            throw new Error('Section must be a non-empty string');
         }
         return await Knowledge.findOne({ section });
     },
@@ -43,7 +43,7 @@ export const KnowledgeModel = {
         if (!query || typeof query !== 'string' || query.trim().length === 0) {
             return [];
         }
-        
+
         return await Knowledge.find({
             $text: { $search: query.trim() }
         }, {
@@ -52,8 +52,8 @@ export const KnowledgeModel = {
     },
 
     async delete(section) {
-        if (!Knowledge.isValidSection(section)) {
-            throw new Error(`Invalid section: ${section}`);
+        if (!section || typeof section !== 'string' || section.trim().length === 0) {
+            throw new Error('Section must be a non-empty string');
         }
         return await Knowledge.deleteOne({ section });
     },
@@ -90,7 +90,7 @@ export const KnowledgeModel = {
                 const result = await this.upsert(section, data);
                 results.push(result);
             }
-            
+
             await session.commitTransaction();
             return results;
         } catch (error) {

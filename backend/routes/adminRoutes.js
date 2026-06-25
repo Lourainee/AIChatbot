@@ -12,7 +12,7 @@ router.get('/knowledge', async (req, res) => {
     try {
         const knowledge = await KnowledgeModel.getAll();
         const cacheStatus = getCacheStatus();
-        
+
         res.json({
             success: true,
             data: knowledge,
@@ -22,11 +22,11 @@ router.get('/knowledge', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching knowledge:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
-    }  
+    }
 });
 
 router.get('/knowledge/:section', async (req, res) => {
@@ -41,15 +41,15 @@ router.get('/knowledge/:section', async (req, res) => {
             });
         }
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             data: knowledge,
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -61,7 +61,7 @@ router.put('/knowledge/:section', validateKnowledgeRequest, async (req, res) => 
         const updatedBy = req.headers['x-user'] || 'admin';
 
         const result = await KnowledgeModel.upsert(section, data, updatedBy);
-        
+
         await refreshKnowledgeCache();
 
         res.json({
@@ -73,9 +73,9 @@ router.put('/knowledge/:section', validateKnowledgeRequest, async (req, res) => 
         });
     } catch (error) {
         console.error('Error updating knowledge:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -101,9 +101,9 @@ router.delete('/knowledge/:section', async (req, res) => {
         });
     } catch (error) {
         console.error('Error deleting knowledge:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -112,7 +112,7 @@ router.post('/knowledge/refresh', async (req, res) => {
     try {
         const result = await refreshKnowledgeCache();
         const cacheStatus = getCacheStatus();
-        
+
         res.json({
             success: true,
             message: 'Cache refreshed successfully',
@@ -122,9 +122,9 @@ router.post('/knowledge/refresh', async (req, res) => {
         });
     } catch (error) {
         console.error('Error refreshing cache:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -132,7 +132,7 @@ router.post('/knowledge/refresh', async (req, res) => {
 router.post('/knowledge/bulk', async (req, res) => {
     try {
         const sections = req.body;
-        
+
         if (!sections || typeof sections !== 'object' || Object.keys(sections).length === 0) {
             return res.status(400).json({
                 success: false,
@@ -151,9 +151,9 @@ router.post('/knowledge/bulk', async (req, res) => {
         });
     } catch (error) {
         console.error('Error bulk uploading:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -162,7 +162,7 @@ router.get('/cache/status', async (req, res) => {
     try {
         const cacheStatus = getCacheStatus();
         const dbCount = await KnowledgeModel.count();
-        
+
         res.json({
             success: true,
             cache: cacheStatus,
@@ -173,9 +173,9 @@ router.get('/cache/status', async (req, res) => {
         });
     } catch (error) {
         console.error('Error getting cache status:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });

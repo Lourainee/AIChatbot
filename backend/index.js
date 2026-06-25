@@ -7,7 +7,6 @@ import { connectDB, getDBStatus } from './config/database.js';
 import { loadKnowledgeFromDB, getCacheStatus, getAIStatus } from './config/genkit.js';
 import { ENV } from './config/env.js';
 
-
 dotenv.config();
 
 const app = express();
@@ -20,20 +19,40 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/chat', chatRoutes);
 app.use('/api/admin', adminRoutes);
 
-// REMOVE TS LATER (TS FOR CHECKING GEMINI AND GENKIT)
-app.get('/ai-status', (req, res) => {
-    res.json({
-        status: 'OK',
-        ai: getAIStatus(),
-        timestamp: new Date().toISOString()
-    });
+app.get('/ai-status', async (req, res) => {
+    try {
+        const status = getAIStatus();
+
+        res.json({
+            status: 'OK',
+            timestamp: new Date().toISOString(),
+            provider: {
+                gemini: {
+                    available: !!ENV.GOOGLE_API_KEY,
+                    initialized: status.isInitialized || false,
+                    hasApiKey: status.hasApiKey || false,
+                    apiKeyPrefix: status.apiKeyPrefix || null,
+                    model: status.model || 'gemini-2.5-flash',
+                }
+            },
+            activeProvider: 'gemini',
+            ai: status,
+        });
+    } catch (error) {
+        console.error('Error getting AI status:', error);
+        res.status(500).json({
+            status: 'ERROR',
+            error: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
 });
 
 app.get('/health', async (req, res) => {
     try {
         const dbStatus = getDBStatus();
         const cacheStatus = getCacheStatus();
-        
+
         res.json({
             status: 'OK',
             timestamp: new Date().toISOString(),
@@ -98,13 +117,13 @@ const startServer = async () => {
         }
 
         app.listen(PORT, () => {
-            console.log(`BLINC Server running on port ${PORT}`);
-            console.log(`Environment: ${ENV.NODE_ENV || 'development'}`);
-            console.log(`API Endpoints:`);
-            console.log(`   - Health: http://localhost:${PORT}/health`);
-            console.log(`   - Chat: http://localhost:${PORT}/api/chat`);
-            console.log(`   - Admin: http://localhost:${PORT}/api/admin/knowledge`);
-            console.log(`   - AI Status: http://localhost:${PORT}/ai-status`);
+            console.log(`\n🚀 BLINC Server running on port ${PORT}`);
+            console.log(`📦 Environment: ${ENV.NODE_ENV || 'development'}`);
+            console.log(`\n📋 API Endpoints:`);
+            console.log(`   - Health:        http://localhost:${PORT}/health`);
+            console.log(`   - Chat:          http://localhost:${PORT}/api/chat`);
+            console.log(`   - Admin:         http://localhost:${PORT}/api/admin/knowledge`);
+            console.log(`   - AI Status:     http://localhost:${PORT}/ai-status`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);

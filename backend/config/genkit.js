@@ -11,21 +11,17 @@ export const ai = genkit({
     enableTracingAndMetrics: ENV.NODE_ENV === 'development',
 });
 
-
 let knowledgeCache = null;
 let cacheTimestamp = null;
 let cacheVersion = 0;
 const CACHE_TTL = ENV.CACHE_TTL || 60000;
 
-
 export const loadKnowledgeFromDB = async () => {
     try {
         const knowledge = await KnowledgeModel.getAsObject();
-        
         knowledgeCache = knowledge;
         cacheTimestamp = new Date();
         cacheVersion++;
-
         console.log('Knowledge loaded from MongoDB');
         console.log(`Sections loaded: ${Object.keys(knowledge).join(', ') || 'None'}`);
         return knowledge;
@@ -35,7 +31,6 @@ export const loadKnowledgeFromDB = async () => {
     }
 };
 
-
 export const getKnowledge = async () => {
     if (knowledgeCache && cacheTimestamp) {
         const now = new Date();
@@ -44,10 +39,36 @@ export const getKnowledge = async () => {
             return knowledgeCache;
         }
     }
-
     return await loadKnowledgeFromDB();
 };
 
+/**
+ * Section affinity map — if the user's query contains any of these keywords,
+ * the listed sections get a large relevance bonus so they surface above the
+ * internship document (which is large and matches almost everything).
+ *
+ * Add new entries here whenever you add a new section to MongoDB.
+ */
+const SECTION_AFFINITY = {
+    company: [
+        'company', 'blinc', 'about', 'who', 'what is blinc',
+        'vision', 'mission', 'culture', 'location', 'founded',
+        'blockchain', 'services', 'consulting', 'baguio'
+    ],
+    cryptosavers: [
+        'cryptosavers', 'crypto', 'savings', 'cryptocurrency',
+        'wallet', 'cwallet', 'csc', 'kyc', 'defi', 'token',
+        'ethereum', 'gdpr', 'ccpa', 'cookies', 'privacy'
+    ],
+    internship: [
+        'internship', 'intern', 'blip', 'apply', 'application',
+        'requirements', 'positions', 'duration', 'hours', 'onboarding',
+        'nda', 'moa', 'interview', 'certificate', 'endorsement'
+    ],
+    faq: [
+        'faq', 'question', 'frequently', 'asked'
+    ]
+};
 
 export const retrieveContext = async (query) => {
     const results = [];
@@ -60,14 +81,10 @@ export const retrieveContext = async (query) => {
             return results;
         }
 
-        const sections = [
-            { data: knowledgeBase.company, key: 'company' },
-            { data: knowledgeBase.internship, key: 'internship' },
-            { data: knowledgeBase.faq, key: 'faq' }
-        ];
+        const sections = Object.entries(knowledgeBase).map(([key, data]) => ({ key, data }));
 
-        const queryWords = query.toLowerCase()
-            .replace(/[^\w\s]/g, ' ')
+        const normalizedQuery = query.toLowerCase().replace(/[^\w\s]/g, ' ');
+        const queryWords = normalizedQuery
             .split(' ')
             .filter(word => word.length > 2);
 
@@ -79,11 +96,23 @@ export const retrieveContext = async (query) => {
             if (!section.data) continue;
 
             const sectionStr = JSON.stringify(section.data).toLowerCase();
+
+            // Base score: count how many query words appear in this section
             let relevance = 0;
-            
             for (const word of queryWords) {
                 if (sectionStr.includes(word)) {
                     relevance++;
+                }
+            }
+
+            // Affinity bonus: if the query contains keywords strongly
+            // associated with this section, add a significant boost.
+            // This prevents the large internship document from drowning
+            // out company/cryptosavers answers.
+            const affinityKeywords = SECTION_AFFINITY[section.key] || [];
+            for (const keyword of affinityKeywords) {
+                if (normalizedQuery.includes(keyword)) {
+                    relevance += 5; // weighted bonus per affinity keyword match
                 }
             }
 
@@ -97,6 +126,9 @@ export const retrieveContext = async (query) => {
         }
 
         results.sort((a, b) => b.relevance - a.relevance);
+
+        console.log('Context scores:', results.map(r => `${r.section}:${r.relevance}`).join(', '));
+
         return results.slice(0, 3);
     } catch (error) {
         console.error('Error retrieving context:', error);
@@ -104,6 +136,53 @@ export const retrieveContext = async (query) => {
     }
 };
 
+// Format an array as bullet lines
+const formatArrayAsBullets = (arr, indent = '') => {
+    if (!Array.isArray(arr)) return '';
+    return arr.map(item => `${indent}- ${item}`).join('\n');
+};
+
+// Recursively format an object into readable text for the system prompt context
+const formatContextData = (data, depth = 0) => {
+    if (typeof data === 'string') return data;
+    if (typeof data === 'number' || typeof data === 'boolean') return String(data);
+
+    if (Array.isArray(data)) {
+        return formatArrayAsBullets(data);
+    }
+
+    if (typeof data === 'object' && data !== null) {
+        let result = '';
+        const indent = '  '.repeat(depth);
+
+        for (const [key, value] of Object.entries(data)) {
+            if (value === null || value === undefined) continue;
+
+            const formattedKey = key.replace(/_/g, ' ').toUpperCase();
+
+            if (Array.isArray(value)) {
+                result += `${indent}${formattedKey}:\n`;
+                result += formatArrayAsBullets(value, indent + '  ');
+                result += '\n\n';
+            } else if (typeof value === 'object' && value !== null) {
+                if (value.step && value.name) {
+                    result += `${indent}- Step ${value.step}: ${value.name} - ${value.description || ''}\n`;
+                } else {
+                    result += `${indent}${formattedKey}:\n`;
+                    result += formatContextData(value, depth + 1);
+                    result += '\n';
+                }
+            } else {
+                if (String(value).trim()) {
+                    result += `${indent}${formattedKey}: ${value}\n`;
+                }
+            }
+        }
+        return result;
+    }
+
+    return String(data);
+};
 
 export const getRelevantContext = async (query) => {
     try {
@@ -113,34 +192,45 @@ export const getRelevantContext = async (query) => {
             return null;
         }
 
-        let contextString = 'Here is relevant info from our knowledge base:\n\n';
+        const MAX_CONTEXT_CHARS = 2500;
+        let contextString = '';
 
         for (const item of context) {
-            contextString += `### ${item.section.toUpperCase()} ###\n`;
-            contextString += JSON.stringify(item.data, null, 2);
+            const sectionLabel = item.section.toUpperCase();
+            contextString += `### ${sectionLabel} ###\n`;
+
+            const formattedData = formatContextData(item.data);
+            contextString += formattedData || 'No data available';
             contextString += '\n\n';
+
+            if (contextString.length > MAX_CONTEXT_CHARS) {
+                contextString = contextString.substring(0, MAX_CONTEXT_CHARS) + '\n...[Context truncated]';
+                break;
+            }
         }
 
-        return contextString;
+        contextString = contextString
+            .replace(/\n{4,}/g, '\n\n')
+            .trim();
+
+        return contextString || null;
     } catch (error) {
         console.error('Error getting relevant context:', error);
         return null;
     }
 };
 
-
 export const refreshKnowledgeCache = async () => {
     const oldVersion = cacheVersion;
     await loadKnowledgeFromDB();
     console.log(`🔄 Cache refreshed from version ${oldVersion} to ${cacheVersion}`);
-    return { 
-        success: true, 
-        oldVersion, 
+    return {
+        success: true,
+        oldVersion,
         newVersion: cacheVersion,
         sections: Object.keys(knowledgeCache || {})
     };
 };
-
 
 export const getCacheStatus = () => {
     const now = new Date();
@@ -154,13 +244,13 @@ export const getCacheStatus = () => {
     };
 };
 
-    // DOUBLE CHECK TO MAKE SURE FUCKIN SHI BE USING GEMINI AND GENKIT BRUH
 export const getAIStatus = () => {
     return {
         isInitialized: !!ai,
         provider: 'Google AI',
         model: 'gemini-2.5-flash',
         hasApiKey: !!ENV.GOOGLE_API_KEY,
-        apiKeyPrefix: ENV.GOOGLE_API_KEY ? ENV.GOOGLE_API_KEY.substring(0, 10) + '...' : null
+        apiKeyPrefix: ENV.GOOGLE_API_KEY ? ENV.GOOGLE_API_KEY.substring(0, 10) + '...' : null,
+        activeProvider: 'gemini'
     };
 };
