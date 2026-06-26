@@ -67,8 +67,31 @@ function FaqItem({ q, a, defaultOpen = false }) {
 }
 
 export default function LandingPage({ onOpenChat }) {
+  const primaryBtn = {
+    border: 'none',
+    borderRadius: '999px',
+    padding: '0.9rem 1.9rem',
+    background: 'linear-gradient(135deg, #4C539F 0%, #EC0B48 100%)',
+    color: '#ffffff',
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 18px 36px rgba(76, 83, 159, 0.18)',
+  };
+  const secondaryBtn = {
+    border: '1.5px solid rgba(76,83,159,0.24)',
+    borderRadius: '999px',
+    padding: '0.9rem 1.9rem',
+    background: 'rgba(255,255,255,0.88)',
+    color: '#4C539F',
+    fontWeight: 700,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
   return (
-    <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+    <div style={{ minHeight: '100vh', overflowX: 'hidden', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
 
       {/* HERO */}
       <section style={{
@@ -76,8 +99,8 @@ export default function LandingPage({ onOpenChat }) {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: 'radial-gradient(ellipse 60% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         overflow: 'hidden',
+        background: 'radial-gradient(circle at top left, rgba(255,255,255,0.96) 0%, rgba(196,214,255,0.62) 28%, transparent 50%), radial-gradient(circle at 100% 15%, rgba(76,83,159,0.18) 0%, transparent 40%), linear-gradient(180deg, #eef2ff 0%, #d7e1ff 45%, #ffffff 100%)',
       }}>
 
         {/* NAV */}
@@ -118,19 +141,10 @@ export default function LandingPage({ onOpenChat }) {
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="lp-btn-smooth" onClick={onOpenChat} style={{
-              border: '1.5px solid #4C539F', borderRadius: '999px',
-              padding: '0.5rem 1.5rem', background: 'transparent',
-              color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
-            }}>
+            <button onClick={onOpenChat} style={primaryBtn}>
               Ask Bitsy now
             </button>
-            <a href="https://www.blinc.ph" target="_blank" rel="noopener noreferrer" className="lp-btn-smooth" style={{
-              border: '1.5px solid #4C539F', borderRadius: '999px',
-              padding: '0.5rem 1.5rem', background: 'transparent',
-              color: '#393C46', fontSize: '0.875rem', cursor: 'pointer',
-              textDecoration: 'none', display: 'inline-block',
-            }}>
+            <a href="https://www.blinc.ph" target="_blank" rel="noopener noreferrer" style={secondaryBtn}>
               View BLIP page
             </a>
           </div>
@@ -261,6 +275,53 @@ export default function LandingPage({ onOpenChat }) {
         </div>
       </section>
 
+      <section style={{
+        background: 'radial-gradient(ellipse 50% 150% at 5% 20%, #6069FF 0%, #A2A8FE 30%, #ececec 55%, #FFFFFF 80%)',
+        padding: '15rem 6rem',
+        margin: '0 0rem 0rem',
+        color: '#4C539F',
+        textAlign: 'center',
+        boxShadow: '0 24px 80px rgba(76, 83, 159, 0.18)',
+      }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+          <p style={{ fontSize: '0.8125rem', fontWeight: 700, letterSpacing: '0.08em', margin: '0 0 0.75rem', opacity: 0.9 }}>READY TO BEGIN?</p>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, margin: '0 0 1rem', lineHeight: 1.05 }}>Start your BLIP journey today.</h2>
+          <p style={{ fontSize: '0.95rem', maxWidth: '520px', margin: '0 auto 2.5rem', lineHeight: 1.75, opacity: 0.93 }}>
+            Apply for the next batch, explore available roles, or just ask Bitsy your first question right now.
+          </p>
+           <button onClick={onOpenChat} style={{ ...primaryBtn, background: 'rgba(255,255,255,0.24)', boxShadow: '0 16px 36px rgba(0, 0, 0, 0.22)', border: 'none', color: '#4C539F' }}>
+            Ask Bitsy your first question
+          </button>
+        </div>
+      </section>
+
+        {/* FOOTER INNER CONTENT */}
+        <footer style={{ background: '#E6E8F8', padding: '2rem', borderTop: '1px solid rgba(0,0,0,0.05)', margin: '0 -2rem' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#393C46', lineHeight: 1.6, textAlign: 'left' }}>
+              <strong style={{ color: '#4C539F' }}>BITSHARES LABS, INC. (BLINC)</strong><br />
+              Level 5 Abanao Square Mall, Baguio City 2600, Philippines<br />
+              Globe: +63 917 459 7000 · Smart: +63 919 627 7000
+            </div>
+{/* Vector Social Icons matching brand assets */}
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              {/* Facebook Icon Button */}
+              <a href="#" aria-label="Facebook" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="16" height="16" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M9 8H7v3h2v9h3v-9h3l.5-3H12V6c0-.88.72-1 1-1h2V2h-3c-2.76 0-5 2.24-5 5v1z"/></svg>
+              </a>
+              {/* Twitter / X Icon Button */}
+              <a href="#" aria-label="Twitter" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="14" height="14" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              {/* LinkedIn Icon Button */}
+              <a href="https://ph.linkedin.com/company/bitshareslabs" target="_blank" aria-label="LinkedIn" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+                <svg width="14" height="14" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+            </div>
+          </div>
+        </footer>
+
     </div>
+
   );
 }
