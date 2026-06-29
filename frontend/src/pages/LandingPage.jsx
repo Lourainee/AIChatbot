@@ -66,6 +66,49 @@ function FaqItem({ q, a, defaultOpen = false }) {
   );
 }
 
+function Navbar({ onOpenChat }) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const links = [
+    { label: 'Home', id: 'home' },
+    { label: 'Challenge & Solution', id: 'challenge' },
+    { label: 'About', id: 'about' },
+    { label: 'FAQs', id: 'faqs' },
+    { label: 'Contact Us', id: 'contact' },
+  ];
+  return (
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0.75rem 2rem',
+      background: scrolled ? 'rgba(255,255,255,0.92)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(12px)' : 'none',
+      boxShadow: scrolled ? '0 2px 16px rgba(76,83,159,0.10)' : 'none',
+      transition: 'background 0.3s, box-shadow 0.3s',
+    }}>
+      <img src="/blinc_logo-nobg.png" alt="Blinc Logo" style={{ height: '3.5rem', cursor: 'pointer' }} onClick={() => scrollTo('home')} />
+      <div style={{ display: 'flex', gap: '0.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        {links.map(({ label, id }) => (
+          <button key={id} onClick={() => scrollTo(id)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: '0.875rem', fontWeight: 600, color: '#4C539F',
+            padding: '0.4rem 0.75rem', borderRadius: '999px',
+            transition: 'background 0.2s',
+          }}
+            onMouseEnter={e => e.target.style.background = 'rgba(76,83,159,0.08)'}
+            onMouseLeave={e => e.target.style.background = 'none'}
+          >{label}</button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
 export default function LandingPage({ onOpenChat }) {
   const primaryBtn = {
     border: 'none',
@@ -93,20 +136,18 @@ export default function LandingPage({ onOpenChat }) {
   return (
     <div style={{ minHeight: '100vh', overflowX: 'hidden', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
 
+      <Navbar onOpenChat={onOpenChat} />
+
       {/* HERO */}
-      <section style={{
+      <section id="home" style={{
         position: 'relative',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        paddingTop: '5rem',
         background: 'radial-gradient(circle at top left, rgba(255,255,255,0.96) 0%, rgba(196,214,255,0.62) 28%, transparent 50%), radial-gradient(circle at 100% 15%, rgba(76,83,159,0.18) 0%, transparent 40%), linear-gradient(180deg, #eef2ff 0%, #d7e1ff 45%, #ffffff 100%)',
       }}>
-
-        {/* NAV */}
-        <nav style={{ padding: '1.25rem 2rem' }}>
-          <img src="/blinc_logo-nobg.png" alt="Blinc Logo" style={{ height: '5rem' }} />
-        </nav>
 
         {/* centered content */}
         <div className="lp-fade-up" style={{
@@ -118,6 +159,7 @@ export default function LandingPage({ onOpenChat }) {
           textAlign: 'center',
           padding: '2rem 2rem 6rem',
         }}>
+          <FadeIn>
           <h1 style={{ margin: '0 0 0.25rem', lineHeight: 1.2 }}>
             <span style={{ display: 'block', fontSize: 'clamp(1.75rem, 3.5vw, 2.625rem)', fontWeight: 700, color: '#4C539F' }}>
               Intern smarter at
@@ -141,19 +183,26 @@ export default function LandingPage({ onOpenChat }) {
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={onOpenChat} style={primaryBtn}>
+            <button onClick={onOpenChat} style={{ ...primaryBtn, transition: 'transform 0.2s, box-shadow 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 24px 48px rgba(76,83,159,0.32)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = primaryBtn.boxShadow; }}
+            >
               Ask Bitsy now
             </button>
-            <a href="https://www.blinc.ph" target="_blank" rel="noopener noreferrer" style={secondaryBtn}>
+            <a href="https://www.blinc.ph" target="_blank" rel="noopener noreferrer" style={{ ...secondaryBtn, transition: 'transform 0.2s, box-shadow 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(76,83,159,0.15)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
               View BLIP page
             </a>
           </div>
+          </FadeIn>
         </div>
 
       </section>
 
       {/* CHALLENGE + SOLUTION */}
-      <section style={{
+      <section id="challenge" style={{
         background: 'radial-gradient(ellipse 80% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         padding: '5rem 2rem',
       }}>
@@ -211,7 +260,7 @@ export default function LandingPage({ onOpenChat }) {
       </section>
 
       {/* ABOUT BLINC */}
-      <section style={{
+      <section id="about" style={{
         background: 'radial-gradient(ellipse 60% 100% at 50% 50%, #FFFFFF 0%, #DADDFF 45%, #A2A8FE 70%, #6069FF 100%)',
         padding: '5rem 2rem',
         textAlign: 'center',
@@ -234,7 +283,7 @@ export default function LandingPage({ onOpenChat }) {
       </section>
 
       {/* FAQs */}
-      <section style={{
+      <section id="faqs" style={{
         background: 'radial-gradient(ellipse 80% 100% at 20% 60%, #6069FF 0%, #A2A8FE 30%, #DADDFF 55%, #FFFFFF 80%)',
         padding: '5rem 2rem',
         minHeight: '100vh',
@@ -254,9 +303,7 @@ export default function LandingPage({ onOpenChat }) {
               <p style={{ fontSize: '0.8125rem', color: '#393C46', margin: '0 0 0.875rem', lineHeight: 1.55 }}>
                 Can't find the answer to your question? Send us an email and we'll get back to you as soon as possible.
               </p>
-              <button className="lp-btn-smooth" style={{ border: '1.5px solid #4C539F', borderRadius: '999px', padding: '0.4rem 1.25rem', background: 'transparent', color: '#393C46', fontSize: '0.875rem', cursor: 'pointer' }}>
-                Send Email
-              </button>
+              <span style={{ fontSize: '0.875rem', color: '#EC0B48', fontWeight: 600 }}>internship@blinc.ph</span>
             </div>
           </div>
 
@@ -284,19 +331,24 @@ export default function LandingPage({ onOpenChat }) {
         boxShadow: '0 24px 80px rgba(76, 83, 159, 0.18)',
       }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+          <FadeIn>
           <p style={{ fontSize: '0.8125rem', fontWeight: 700, letterSpacing: '0.08em', margin: '0 0 0.75rem', opacity: 0.9 }}>READY TO BEGIN?</p>
           <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, margin: '0 0 1rem', lineHeight: 1.05 }}>Start your BLIP journey today.</h2>
           <p style={{ fontSize: '0.95rem', maxWidth: '520px', margin: '0 auto 2.5rem', lineHeight: 1.75, opacity: 0.93 }}>
             Apply for the next batch, explore available roles, or just ask Bitsy your first question right now.
           </p>
-           <button onClick={onOpenChat} style={{ ...primaryBtn, background: 'rgba(255,255,255,0.24)', boxShadow: '0 16px 36px rgba(0, 0, 0, 0.22)', border: 'none', color: '#4C539F' }}>
+           <button onClick={onOpenChat} style={{ ...primaryBtn, background: 'rgba(255,255,255,0.24)', boxShadow: '0 16px 36px rgba(0, 0, 0, 0.22)', border: 'none', color: '#4C539F', transition: 'transform 0.2s, box-shadow 0.2s' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 24px 48px rgba(0,0,0,0.30)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 16px 36px rgba(0,0,0,0.22)'; }}
+           >
             Ask Bitsy your first question
           </button>
+          </FadeIn>
         </div>
       </section>
 
         {/* FOOTER INNER CONTENT */}
-        <footer style={{ background: '#E6E8F8', padding: '2rem', borderTop: '1px solid rgba(0,0,0,0.05)', margin: '0 -2rem' }}>
+        <footer id="contact" style={{ background: '#E6E8F8', padding: '2rem', borderTop: '1px solid rgba(0,0,0,0.05)', margin: '0 -2rem' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
             <div style={{ fontSize: '0.75rem', color: '#393C46', lineHeight: 1.6, textAlign: 'left' }}>
               <strong style={{ color: '#4C539F' }}>BITSHARES LABS, INC. (BLINC)</strong><br />
