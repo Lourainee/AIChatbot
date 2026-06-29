@@ -118,8 +118,8 @@ const startServer = async () => {
 
         app.listen(PORT, () => {
             console.log(`\n🚀 BLINC Server running on port ${PORT}`);
-            console.log(`📦 Environment: ${ENV.NODE_ENV || 'development'}`);
-            console.log(`\n📋 API Endpoints:`);
+            console.log(`Environment: ${ENV.NODE_ENV || 'development'}`);
+            console.log(`\n API Endpoints:`);
             console.log(`   - Health:        http://localhost:${PORT}/health`);
             console.log(`   - Chat:          http://localhost:${PORT}/api/chat`);
             console.log(`   - Admin:         http://localhost:${PORT}/api/admin/knowledge`);

@@ -1,9 +1,7 @@
-// config/aiService.js
 import { pipeline, env } from '@huggingface/transformers';
 import { ai as genkitAI } from './genkit.js';
 import { ENV } from './env.js';
 
-// Configure Transformers.js
 env.allowLocalModels = true;
 env.allowRemoteModels = true;
 env.localModelPath = './models/';
@@ -18,11 +16,9 @@ class AIService {
         this.modelLoading = false;
     }
 
-    // Initialize local model
     async initLocalModel() {
         if (this.modelLoaded) return true;
         if (this.modelLoading) {
-            // Wait for loading to complete
             return new Promise((resolve) => {
                 const checkLoaded = setInterval(() => {
                     if (this.modelLoaded) {
@@ -35,8 +31,8 @@ class AIService {
 
         this.modelLoading = true;
         try {
-            console.log(`🔄 Loading local model: ${this.modelName}...`);
-            console.log('⏳ This may take a moment on first run (downloading model)...');
+            console.log(`Loading local model: ${this.modelName}...`);
+            console.log('This may take a moment on first run (downloading model)...');
 
             this.generator = await pipeline(
                 'text-generation',
@@ -54,11 +50,11 @@ class AIService {
 
             this.modelLoaded = true;
             this.currentProvider = 'local';
-            console.log('✅ Local AI model loaded successfully');
+            console.log('Local AI model loaded successfully');
             this.modelLoading = false;
             return true;
         } catch (error) {
-            console.error('❌ Failed to load local model:', error.message);
+            console.error('Failed to load local model:', error.message);
             this.modelLoaded = false;
             this.currentProvider = 'gemini';
             this.modelLoading = false;
@@ -66,7 +62,6 @@ class AIService {
         }
     }
 
-    // Generate response using local model (Original Pipeline Format)
     async generateLocalResponse(systemPrompt, userMessage, config = {}) {
         if (!this.modelLoaded) {
             const loaded = await this.initLocalModel();
@@ -75,7 +70,6 @@ class AIService {
             }
         }
 
-        // Extract key info from system prompt
         const context = systemPrompt
             .split('\n')
             .filter(line => {
@@ -92,7 +86,6 @@ class AIService {
             .join(' ')
             .substring(0, 500);
 
-        // Simple, clean prompt format
         const fullPrompt = `Context: ${context}
 
 Question: ${userMessage}
@@ -110,12 +103,10 @@ Answer:`;
 
         let generatedText = result[0]?.generated_text || '';
         
-        // Extract just the answer
         if (generatedText.includes('Answer:')) {
             generatedText = generatedText.split('Answer:')[1]?.trim() || generatedText;
         }
         
-        // Remove any extra text after the answer
         const endMarkers = ['Context:', 'Question:', 'Answer:', 'Note:', '---', '```'];
         for (const marker of endMarkers) {
             if (generatedText.includes(marker)) {
@@ -123,7 +114,6 @@ Answer:`;
             }
         }
 
-        // Clean up
         generatedText = generatedText
             .replace(/^As an AI.*?[,.]/i, '')
             .replace(/^I don't have.*?[,.]/i, '')
@@ -136,7 +126,6 @@ Answer:`;
             .replace(/\s{2,}/g, ' ')
             .trim();
 
-        // If response is too long, truncate
         const words = generatedText.split(/\s+/);
         if (words.length > 200) {
             const truncated = words.slice(0, 150).join(' ');
@@ -146,7 +135,6 @@ Answer:`;
             generatedText = cutPoint > 0 ? truncated.substring(0, cutPoint + 1) : truncated + '...';
         }
 
-        // Format bullet points properly
         generatedText = generatedText
             .replace(/([^.\n])(\s*[-•*]\s*)/g, '$1\n$2')
             .replace(/[•*]/g, '-')
@@ -154,7 +142,6 @@ Answer:`;
             .replace(/^\n/, '')
             .trim();
 
-        // Fallback if response is empty or unusable
         if (!generatedText || generatedText.length < 10 || generatedText.includes('language model')) {
             generatedText = "The BLINC internship program offers positions in Virtual Assistance, Web Development, and Design. Requirements include:\n- Currently enrolled in related Bachelor's program\n- Basic technical skills\n- Strong communication skills\n\nFor more details, please contact our recruitment team.";
         }
@@ -162,15 +149,13 @@ Answer:`;
         return { text: generatedText };
     }
 
-    // Generate response with fallback
     async generate(options) {
         const { system, messages, config = {} } = options;
         const userMessage = messages?.find(m => m.role === 'user')?.content?.[0]?.text || '';
 
-        // Try local AI first if enabled
         if (this.useLocalAI) {
             try {
-                console.log('🤖 Using local model...');
+                console.log('Using local model...');
                 const response = await this.generateLocalResponse(system, userMessage, {
                     temperature: config.temperature || 0.2,
                     maxNewTokens: config.maxNewTokens || 150,
@@ -178,13 +163,12 @@ Answer:`;
                 this.currentProvider = 'local';
                 return response;
             } catch (localError) {
-                console.warn('⚠️ Local AI failed, falling back to Gemini:', localError.message);
+                console.warn('Local AI failed, falling back to Gemini:', localError.message);
                 this.currentProvider = 'gemini';
             }
         }
 
-        // Use Gemini as fallback
-        console.log('☁️ Using Gemini API...');
+        console.log('Using Gemini API...');
         try {
             const result = await genkitAI.generate({
                 model: options.model || 'googleai/gemini-2.5-flash',
@@ -198,9 +182,8 @@ Answer:`;
             this.currentProvider = 'gemini';
             return result;
         } catch (geminiError) {
-            // If Gemini fails, try local one more time as last resort
             if (this.useLocalAI) {
-                console.warn('⚠️ Gemini failed, attempting local fallback...');
+                console.warn('Gemini failed, attempting local fallback...');
                 try {
                     const response = await this.generateLocalResponse(system, userMessage, {
                         temperature: 0.2,
@@ -209,7 +192,7 @@ Answer:`;
                     this.currentProvider = 'local';
                     return response;
                 } catch (finalError) {
-                    console.error('❌ Both providers failed:', finalError.message);
+                    console.error('Both providers failed:', finalError.message);
                     throw finalError;
                 }
             }
@@ -217,7 +200,6 @@ Answer:`;
         }
     }
 
-    // Get current provider status
     getStatus() {
         return {
             currentProvider: this.currentProvider,
@@ -229,7 +211,6 @@ Answer:`;
         };
     }
 
-    // Toggle between providers
     async toggleProvider(useLocal) {
         this.useLocalAI = useLocal;
         if (useLocal && !this.modelLoaded) {
@@ -238,7 +219,6 @@ Answer:`;
         return this.getStatus();
     }
 
-    // Force reload local model
     async reloadLocalModel() {
         this.modelLoaded = false;
         this.modelLoading = false;
@@ -247,14 +227,12 @@ Answer:`;
     }
 }
 
-// Create singleton instance
 const aiService = new AIService();
 
-// Initialize local model in background if enabled
 if (ENV.USE_LOCAL_AI !== 'false') {
     aiService.initLocalModel().catch(err => {
-        console.warn('⚠️ Background model loading failed:', err.message);
-        console.log('💡 The chatbot will use Gemini API instead.');
+        console.warn('Background model loading failed:', err.message);
+        console.log('The chatbot will use Gemini API instead.');
     });
 }
 

@@ -42,13 +42,7 @@ export const getKnowledge = async () => {
     return await loadKnowledgeFromDB();
 };
 
-/**
- * Section affinity map — if the user's query contains any of these keywords,
- * the listed sections get a large relevance bonus so they surface above the
- * internship document (which is large and matches almost everything).
- *
- * Add new entries here whenever you add a new section to MongoDB.
- */
+
 const SECTION_AFFINITY = {
     company: [
         'company', 'blinc', 'about', 'who', 'what is blinc',
@@ -97,7 +91,6 @@ export const retrieveContext = async (query) => {
 
             const sectionStr = JSON.stringify(section.data).toLowerCase();
 
-            // Base score: count how many query words appear in this section
             let relevance = 0;
             for (const word of queryWords) {
                 if (sectionStr.includes(word)) {
@@ -105,14 +98,10 @@ export const retrieveContext = async (query) => {
                 }
             }
 
-            // Affinity bonus: if the query contains keywords strongly
-            // associated with this section, add a significant boost.
-            // This prevents the large internship document from drowning
-            // out company/cryptosavers answers.
             const affinityKeywords = SECTION_AFFINITY[section.key] || [];
             for (const keyword of affinityKeywords) {
                 if (normalizedQuery.includes(keyword)) {
-                    relevance += 5; // weighted bonus per affinity keyword match
+                    relevance += 5; 
                 }
             }
 
@@ -136,13 +125,11 @@ export const retrieveContext = async (query) => {
     }
 };
 
-// Format an array as bullet lines
 const formatArrayAsBullets = (arr, indent = '') => {
     if (!Array.isArray(arr)) return '';
     return arr.map(item => `${indent}- ${item}`).join('\n');
 };
 
-// Recursively format an object into readable text for the system prompt context
 const formatContextData = (data, depth = 0) => {
     if (typeof data === 'string') return data;
     if (typeof data === 'number' || typeof data === 'boolean') return String(data);

@@ -1,10 +1,9 @@
-// middleware/auth.js
 export const authMiddleware = (req, res, next) => {
     const apiKey = req.headers['x-api-key'];
     const adminKey = process.env.ADMIN_API_KEY;
 
     if (!adminKey) {
-        console.warn('⚠️ ADMIN_API_KEY not set in environment variables');
+        console.warn('ADMIN_API_KEY not set in environment variables');
         return res.status(500).json({
             success: false,
             error: 'Admin API key not configured'

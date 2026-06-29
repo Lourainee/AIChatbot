@@ -45,46 +45,22 @@ setInterval(() => {
     }
 }, 60000);
 
-/**
- * Bullet formatter — ensures every bullet item is on its own line
- * and converts all bullet styles to •.
- *
- * Pass order:
- * 1. If a bullet character (-, •, *) immediately follows a colon+space
- *    on the same line, insert a newline between the colon and the bullet
- *    so the intro sentence and the list are visually separated.
- * 2. Split any remaining inline collapsed bullets
- *    (" • Next item", " - Next item") onto their own lines.
- * 3. Normalise all line-start bullet characters to the §B§ marker.
- * 4. Rebuild lines and replace §B§ with "• ".
- *
- * Safe guards:
- * - Hyphenated words ("text-based", "well-known") are untouched.
- * - Date/version ranges ("200-300", "v1-v2") are untouched.
- */
 const formatBulletPoints = (text) => {
     if (!text) return text;
 
-    // Pass 1 — insert newline between "intro text: • First item"
-    // Matches a colon (with optional trailing space) immediately followed
-    // by a bullet marker and a word character.
     let result = text.replace(/:\s*([-•*])\s+(?=[A-Za-z0-9])/g, ':\n$1 ');
 
-    // Pass 2 — split remaining inline collapsed bullets onto their own lines.
-    // Only triggers on " - Word", " • Word", " * Word" mid-line (not at line start).
     result = result.replace(/ ([-•*]) (?=[A-Za-z0-9])/g, (match, marker, offset, str) => {
         const prevChar = str[offset - 1];
         if (prevChar === '\n') return match;
         return '\n' + marker + ' ';
     });
 
-    // Pass 3 — normalise all line-start bullet styles to §B§
     result = result
         .replace(/^[ \t]*•[ \t]*/gm, '§B§')
         .replace(/^[ \t]*\*[ \t]*/gm, '§B§')
         .replace(/^[ \t]*-[ \t]*/gm, '§B§');
 
-    // Pass 4 — clean up lines, restore §B§ as "• "
     const lines = result
         .split('\n')
         .map(l => l.trim())
@@ -166,7 +142,6 @@ const getConciseResponse = async (message, context, maxAttempts = 2) => {
     if (response) return response;
     if (lastError) throw lastError;
 
-    // Exhausted retries — do a proper summarisation pass
     try {
         const summaryResult = await ai.generate({
             model: 'googleai/gemini-2.5-flash',

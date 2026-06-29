@@ -6,8 +6,6 @@ const knowledgeSchema = new mongoose.Schema({
         required: [true, 'Section is required'],
         unique: true,
         trim: true,
-        // No enum — sections are open-ended so new ones (cryptosavers, etc.)
-        // can be added via the admin API without a code change.
         validate: {
             validator: function(v) {
                 return typeof v === 'string' && v.trim().length > 0;
@@ -42,7 +40,6 @@ knowledgeSchema.pre('save', function(next) {
     next();
 });
 
-// Accepts any non-empty string — no fixed whitelist
 knowledgeSchema.statics.isValidSection = function(section) {
     return typeof section === 'string' && section.trim().length > 0;
 };
