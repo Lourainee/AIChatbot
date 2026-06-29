@@ -105,7 +105,7 @@ export default function LandingPage({ onOpenChat }) {
 
         {/* NAV */}
         <nav style={{ padding: '1.25rem 2rem' }}>
-          <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#000000' }}>Blinc Logo</span>
+          <img src="/blinc_logo.png" alt="Blinc Logo" style={{ height: '5rem' }} />
         </nav>
 
         {/* centered content */}
@@ -306,11 +306,11 @@ export default function LandingPage({ onOpenChat }) {
 {/* Vector Social Icons matching brand assets */}
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               {/* Facebook Icon Button */}
-              <a href="#" aria-label="Facebook" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+              <a href="https://www.facebook.com/blinctech/" target="_blank" aria-label="Facebook" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
                 <svg width="16" height="16" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M9 8H7v3h2v9h3v-9h3l.5-3H12V6c0-.88.72-1 1-1h2V2h-3c-2.76 0-5 2.24-5 5v1z"/></svg>
               </a>
               {/* Twitter / X Icon Button */}
-              <a href="#" aria-label="Twitter" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+              <a href="https://x.com/bitshareslabs" target="_blank" aria-label="Twitter" style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#4C539F', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
                 <svg width="14" height="14" fill="#FFFFFF" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               </a>
               {/* LinkedIn Icon Button */}
