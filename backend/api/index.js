@@ -1,8 +1,3 @@
-import app, { initializeServer } from '../index.js';
+import handler from '../backend/api/index.js';
 
-const initPromise = initializeServer();
-
-export default async function handler(req, res) {
-  await initPromise;
-  return app(req, res);
-}
+export default handler;
