@@ -105,7 +105,7 @@ export default function LandingPage({ onOpenChat }) {
 
         {/* NAV */}
         <nav style={{ padding: '1.25rem 2rem' }}>
-          <img src="/blinc_logo.png" alt="Blinc Logo" style={{ height: '5rem' }} />
+          <img src="/blinc_logo-nobg.png" alt="Blinc Logo" style={{ height: '5rem' }} />
         </nav>
 
         {/* centered content */}
